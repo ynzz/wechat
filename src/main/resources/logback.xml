@@ -1,0 +1,47 @@
+<configuration>
+
+	<property name="default_pattern" value="[%d{yyyy-MM-dd HH:mm:ss SSS}][%-5level]-[%X{userId}-%X{transId}]-[%logger{0}:%L] %m%n"/>
+	<property name="fileNamePath_pre" value="/codes/log/"/>
+
+	<!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${default_pattern}</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	
+	<!-- 滚动记录日志文件 -->
+	<appender name="INFO_FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${fileNamePath_pre}info.log</File>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<!--按照大小和时间输出日志到文件-->
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${fileNamePath_pre}%d{yyyy-MM-dd}_info_%i.log</fileNamePattern>
+			<maxFileSize>100MB</maxFileSize>
+			<maxHistory>200</maxHistory>
+			<totalSizeCap>20GB</totalSizeCap>
+		</rollingPolicy>
+        <encoder>
+			<pattern>${default_pattern}</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="INFO_FILE" />
+	</appender>
+		
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="INFO_FILE" />
+	</root>
+	
+	<logger name="com.szl.mapper" level="DEBUG" additivity="false">
+   		<appender-ref ref="STDOUT" />
+	</logger>
+    
+</configuration>
